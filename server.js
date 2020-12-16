@@ -71,8 +71,8 @@ module.exports = function (app) {
         const requestID = req.params.id;
         console.log(requestID);
 
-        let note = newNote.filter(n => {
-            return n.id === requestID;
+        let note = newNote.filter(note => {
+            return note.id === requestID;
         })[0];
 
         console.log(note);
@@ -87,7 +87,7 @@ module.exports = function (app) {
 
 
 
-};
+
 
 
 // app.get('/notes', (req, res) => {
