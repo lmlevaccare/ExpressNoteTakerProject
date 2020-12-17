@@ -1,27 +1,43 @@
 const uuid = require('uuid');
-var noteData = require('./../data/db.json');
-// var postNote = require('./../server');
-// var index=require('./../public/js/index')
+// var data = require('./data/db.json');
+
 const fs = require('fs');
-const render=require('./../public/js/index')
+var notesData = getNote();
 // ===============================================================================
-// ROUTING
+// api ROUTING
 // ===============================================================================
 
-module.exports = function (app) {
-  
+function getNote() {
+  let data = fs.readFileSync('./data/db.json', 'utf8');
 
-  app.get('./../public/html/notes', function (req, res) {
-    let newNote = JSON.parse(noteData);
-    let index = 0;
+  let newNote = JSON.parse(data);
+    
+  let index = 0;
+
     while (index < newNote.length) {
       console.log(newNote[index]);
       index += 1;
     }
-    res.json(noteData);
-  });
+  return newNote;
+}
 
-  app.post('./../public/html/notes', function (req, res) {
+
+module.exports = function (app) {
+  
+  app.get("/api/notes", function (req, res,next) {
+      notesData = getNote();
+      res.json(notesData);
+    
+    // let newNote = JSON.parse(noteData);
+    // let index = 0;
+    // while (index < newNote.length) {
+    //   console.log(newNote[index]);
+    //   index += 1;
+    // }
+     next()
+  });
+ 
+  app.post("/api/notes", function (req, res) {
 
 
     var addNote = {
@@ -33,14 +49,16 @@ module.exports = function (app) {
     if (!addNote.title) {
       return res.status(400).json({ msg: "Please Add Note Title" })
     }
-    
-  addNote.push(newNote);
-    fs.writeFile('./../data/db.json');
-    res.json(addNote);
+      
+    notesData.push(addNote);
+    fs.writeFileSync('./data/db.json', JSON.stringify(notesData), 'utf8');
+        res.json(true);
+    // fs.writeFile('./data/db.json');
+    // res.json(addNote);
     
   });
 
-  app.delete("./../public/html/notes/:id", function (req, res) {
+  app.delete("/api/notes/:id", function (req, res) {
     const requestID = req.params.id;
     console.log(requestID);
 
@@ -53,7 +71,7 @@ module.exports = function (app) {
 
     notes.splice(index, 1);
 
-    fs.writeFileSync('./db.json', JSON.stringify(newNote), 'utf8');
+    fs.writeFileSync('./data/db.json', JSON.stringify(newNote), 'utf8');
     res.json("Note deleted");
   });
 
