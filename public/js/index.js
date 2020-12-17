@@ -52,6 +52,7 @@ const renderActiveNote = () => {
 
 // Get the note data from the inputs, save it to the db and update the view
 const handleNoteSave = function () {
+  console.log(handleNoteSave);
   const newNote = {
     title: $noteTitle.val(),
     text: $noteText.val(),
@@ -95,6 +96,7 @@ const handleNewNoteView = function () {
 // If a note's title or text are empty, hide the save button
 // Or else show it
 const handleRenderSaveBtn = function () {
+  
   if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
     $saveNoteBtn.hide();
   } else {
